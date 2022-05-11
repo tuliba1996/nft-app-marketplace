@@ -1,0 +1,15 @@
+.home-container {
+    width: 100%;
+    -webkit-margin-start: 0;
+    margin-inline-start: 0;
+    -webkit-margin-end: 0;
+    margin-inline-end: 0;
+    -webkit-padding-start: 0!important;
+    padding-inline-start: 0!important;
+    -webkit-padding-end: 0!important;
+    padding-inline-end: 0!important;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
