@@ -110,8 +110,16 @@ contract NFTMarketplace is ERC721URIStorage {
         idToMarketItem[tokenId].seller = payable(address(0));
         _itemsSold.increment();
         _transfer(address(this), msg.sender, tokenId);
-        payable(owner).transfer(listingPrice);
-        payable(seller).transfer(msg.value);
+        payable(owner).transfer(listingPrice);          // tra phi cho address contract
+        payable(seller).transfer(msg.value);            // chuyen tien tra cho seller
+    }
+
+    /* Transfer NFT */
+
+    function transferNft(address to, uint256 tokenId) public payable {
+        idToMarketItem[tokenId].owner = payable(to);
+        _transfer(msg.sender, to, tokenId);
+
     }
 
     /* Returns all unsold market items */

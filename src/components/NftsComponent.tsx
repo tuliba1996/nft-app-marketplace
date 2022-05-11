@@ -24,18 +24,19 @@ interface PropsType {
   nfts: NftsType[];
   loading?: boolean;
   buyNft?: (nft: NftsType) => void;
+  openModal?: (nft: NftsType) => void;
 }
 
 export const NftsComponent = (props: PropsType) => {
   return (
     <SimpleGrid bg="rgb(19 24 53)" paddingBlock={10} paddingInline={40}>
       <Center>{props?.loading ? <LoadingComponent /> : null}</Center>
-      <SimpleGrid columns={4} spacing={10} pt={10}>
+      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} spacing={10} pt={10}>
         {props.nfts &&
           props.nfts.map((nft: any) => {
             return (
               <Box
-                maxW="sm"
+                maxW="md"
                 borderWidth="1px"
                 borderRadius="lg"
                 overflow="hidden"
@@ -93,10 +94,9 @@ export const NftsComponent = (props: PropsType) => {
                     </Box>
                   </Box>
                 </Box>
-                {props.buyNft && (
-                  <Center>
+                <Center>
+                  {props.buyNft && (
                     <Button
-                      // leftIcon={<MoonIcon />}
                       colorScheme="pink"
                       variant="solid"
                       marginBlock={5}
@@ -107,8 +107,21 @@ export const NftsComponent = (props: PropsType) => {
                     >
                       Buy Now
                     </Button>
-                  </Center>
-                )}
+                  )}
+                  {props.openModal && (
+                    <Button
+                      colorScheme="pink"
+                      variant="solid"
+                      marginBlock={5}
+                      marginInline={2}
+                      onClick={() => {
+                        if (props.openModal) props.openModal(nft);
+                      }}
+                    >
+                      Transfer
+                    </Button>
+                  )}
+                </Center>
               </Box>
             );
           })}
