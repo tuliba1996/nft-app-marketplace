@@ -1,9 +1,19 @@
 import { Box, Link, Stack, Text } from "@chakra-ui/react";
 
-const MenuItem = ({ children, isLast, to = "/", ...rest }: any) => {
+export const MenuItem = ({
+  children,
+  isLast,
+  hover = false,
+  to = "/",
+  ...rest
+}: any) => {
   return (
     <Link href={to}>
-      <Text display="block" {...rest}>
+      <Text
+        display="block"
+        {...rest}
+        _hover={hover ? { color: "#262625" } : {}}
+      >
         {children}
       </Text>
     </Link>
@@ -23,9 +33,33 @@ export const MenuLink = ({ isOpen }: any) => {
         direction={["column", "row", "row", "row"]}
         pt={[4, 4, 0, 0]}
       >
-        <MenuItem to="/create-nft">Create NFT</MenuItem>
-        <MenuItem to="/my-nft">My NFTs</MenuItem>
-        <MenuItem to="/dashboard">Dashboard</MenuItem>
+        <MenuItem
+          hover
+          color="white"
+          fontSize="l"
+          to="/create-nft"
+          fontWeight={700}
+        >
+          Create NFT
+        </MenuItem>
+        <MenuItem
+          hover
+          color="white"
+          fontSize="l"
+          fontWeight={700}
+          to="/my-nft"
+        >
+          My NFTs
+        </MenuItem>
+        <MenuItem
+          hover
+          color="white"
+          fontSize="l"
+          fontWeight={700}
+          to="/dashboard"
+        >
+          Dashboard
+        </MenuItem>
       </Stack>
     </Box>
   );

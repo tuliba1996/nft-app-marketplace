@@ -15,7 +15,6 @@ export const NavBar = (props: any) => {
         display="flex"
         flexDirection="row"
         alignItems="center"
-        w="300px"
         color={["white", "white", "primary.500", "primary.500"]}
       />
       <MenuToggle toggle={toggle} isOpen={isOpen} />
