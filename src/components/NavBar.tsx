@@ -3,6 +3,7 @@ import { NavBarContainer } from "./NavBarContainer";
 import Logo from "./Logo";
 import { MenuLink } from "./MenuLink";
 import { MenuToggle } from "./MenuToggle";
+import { ConnectWallet } from "./ConnectWallet";
 
 export const NavBar = (props: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +20,7 @@ export const NavBar = (props: any) => {
       />
       <MenuToggle toggle={toggle} isOpen={isOpen} />
       <MenuLink isOpen={isOpen} />
+      <ConnectWallet />
     </NavBarContainer>
   );
 };

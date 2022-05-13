@@ -8,14 +8,12 @@ import {
   InputLeftElement,
   Text,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 
 import { useState } from "react";
 import { create as ipfsHttpClient } from "ipfs-http-client";
-import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-import NFTMarketplace from "abis/NFTMarketplace.json";
-import { marketplaceAddress } from "config";
+import { useAppDispatch } from "../hooks";
+import { listNftForSale } from "../actions/marketAction";
 
 const client = ipfsHttpClient({ url: "https://ipfs.infura.io:5001" });
 
@@ -26,7 +24,8 @@ export default function CreateNft() {
     name: "",
     description: "",
   });
-  const router = useRouter();
+
+  const dispatch = useAppDispatch();
 
   async function onChange(e: any) {
     const file = e.target.files[0];
@@ -60,29 +59,13 @@ export default function CreateNft() {
     }
   }
 
-  async function listNFTForSale() {
+  const onListNFTForSale = async () => {
     const url = await uploadToIPFS();
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
 
-    /* next, create the item */
     const price = ethers.utils.parseUnits(formInput.price, "ether");
-    let contract = new ethers.Contract(
-      marketplaceAddress,
-      NFTMarketplace.abi,
-      signer
-    );
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
-    let transaction = await contract.createToken(url, price, {
-      value: listingPrice,
-    });
-    await transaction.wait();
 
-    router.push("/");
-  }
+    if (url && price) dispatch(listNftForSale({ url: url, price: price }));
+  };
 
   return (
     <SimpleGrid columns={1} spacing={10}>
@@ -139,7 +122,7 @@ export default function CreateNft() {
             />
           </InputGroup>
 
-          <Button onClick={listNFTForSale}>Create NFT</Button>
+          <Button onClick={onListNFTForSale}>Create NFT</Button>
         </Stack>
       </Center>
     </SimpleGrid>
