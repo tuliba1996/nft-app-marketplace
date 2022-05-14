@@ -15,18 +15,17 @@ const Home: NextPage = () => {
     disconnect,
     connected,
     web3,
+    provider,
     providerChainID,
     checkWrongNetwork,
   } = useWeb3Context();
 
-  console.log("connected", connected);
-
   useEffect(() => {
-    dispatch(fetchNftMarket());
+    dispatch(fetchNftMarket({ provider }));
   }, []);
 
   const onClickBuyNft = (nft: NftType) => {
-    dispatch(buyNft(nft));
+    dispatch(buyNft({ nft, provider }));
   };
 
   return <NftsComponent loading={loading} nfts={nfts} buyNft={onClickBuyNft} />;

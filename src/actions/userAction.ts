@@ -1,28 +1,19 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
 import { useContractSigner } from "../hooks/useContractSigner";
 import { serializerNft } from "../ultis/serializerNft";
+import { JsonRpcProvider } from "@ethersproject/providers";
+import { ethers } from "ethers";
+import { marketplaceAddress } from "../config";
+import NFTMarketplace from "../abis/NFTMarketplace.json";
 
-export const connectWalletAction = createAsyncThunk(
-  "user/connectWallet",
-  async (param?: {}) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-
-    const accounts = await provider.send("eth_requestAccounts", []);
-    if (accounts.length > 0) return accounts[0];
-  }
-);
+interface IFetchNft {
+  provider: JsonRpcProvider;
+}
 
 export const fetchNftListed = createAsyncThunk(
   "user/fetchNftListed",
-  async (param?: {}) => {
-    const contractSigner = await useContractSigner({
-      network: "mainnet",
-      cacheProvider: true,
-    });
+  async ({ provider }: IFetchNft) => {
+    const contractSigner = useContractSigner(provider);
 
     const data = await contractSigner.fetchItemsListed();
 
@@ -34,15 +25,21 @@ export const fetchNftListed = createAsyncThunk(
 
 export const fetchMyNft = createAsyncThunk(
   "user/fetchMyNft",
-  async (param?: {}) => {
-    const contractSigner = await useContractSigner({
-      network: "mainnet",
-      cacheProvider: true,
-    });
+  async ({ provider }: IFetchNft) => {
+    // const contractSigner = useContractSigner(provider);
 
-    const data = await contractSigner.fetchMyNFTs();
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(
+      marketplaceAddress,
+      NFTMarketplace.abi,
+      signer
+    );
+    const t = await signer.getAddress();
+    console.log("contract", t);
+    const data = await contract.fetchMyNFTs();
+    console.log("data");
 
-    const items = serializerNft(data, contractSigner);
+    const items = serializerNft(data, contract);
 
     return items;
   }

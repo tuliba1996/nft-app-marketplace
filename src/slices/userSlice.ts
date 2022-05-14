@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  connectWalletAction,
-  fetchMyNft,
-  fetchNftListed,
-} from "../actions/userAction";
+import { fetchMyNft, fetchNftListed } from "../actions/userAction";
 import { NftType } from "../type/marketType";
 
 interface UserState {
@@ -32,12 +28,6 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(
-        connectWalletAction.fulfilled,
-        (state, action: PayloadAction<any>) => {
-          state.user_address = action.payload;
-        }
-      )
       .addCase(fetchNftListed.pending, (state, action: PayloadAction<any>) => {
         state.loading = true;
       })

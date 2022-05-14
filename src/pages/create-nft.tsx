@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { ethers } from "ethers";
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch, useWeb3Context } from "../hooks";
 import { listNftForSale } from "../actions/marketAction";
 import { useRouter } from "next/router";
 
@@ -29,6 +29,8 @@ export default function CreateNft() {
   const router = useRouter();
 
   const dispatch = useAppDispatch();
+
+  const { provider } = useWeb3Context();
 
   async function onChange(e: any) {
     const file = e.target.files[0];
@@ -67,7 +69,7 @@ export default function CreateNft() {
 
     const price = ethers.utils.parseUnits(formInput.price, "ether");
     if (url && price) {
-      dispatch(listNftForSale({ url: url, price: price, router }));
+      dispatch(listNftForSale({ url: url, price: price, router, provider }));
     }
   };
 

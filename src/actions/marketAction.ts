@@ -6,12 +6,16 @@ import { useContractSigner } from "../hooks/useContractSigner";
 import { store } from "../store";
 import { serializerNft } from "../ultis/serializerNft";
 import { fetchMyNft } from "./userAction";
-import { useRouter } from "next/router";
+import { JsonRpcProvider } from "@ethersproject/providers";
+
+interface IFetchNftMarket {
+  provider: JsonRpcProvider;
+}
 
 export const fetchNftMarket = createAsyncThunk(
   "market/fetchNftMarket",
-  async (param?: {}) => {
-    const contractProvider = useContractProvider();
+  async ({ provider }: IFetchNftMarket) => {
+    const contractProvider = useContractProvider(provider);
 
     const data = await contractProvider.fetchMarketItems();
 
@@ -21,10 +25,15 @@ export const fetchNftMarket = createAsyncThunk(
   }
 );
 
+interface IBuyNft {
+  nft: NftType;
+  provider: JsonRpcProvider;
+}
+
 export const buyNft = createAsyncThunk(
   "market/buyNft",
-  async (nft: NftType) => {
-    const contractSigner = await useContractSigner();
+  async ({ nft, provider }: IBuyNft) => {
+    const contractSigner = await useContractSigner(provider);
     const { dispatch } = store;
 
     /* user will be prompted to pay the asking proces to complete the transaction */
@@ -33,37 +42,50 @@ export const buyNft = createAsyncThunk(
       value: price,
     });
     await transaction.wait();
-    dispatch(fetchNftMarket());
+    dispatch(fetchNftMarket({ provider }));
   }
 );
+
+interface ITransferNft {
+  nft: NftType;
+  toAddress: string;
+  provider: JsonRpcProvider;
+}
 
 export const transferNft = createAsyncThunk(
   "market/transferNft",
-  async (param: { nft: NftType; toAddress: string }) => {
-    const contractSigner = await useContractSigner();
+  async ({ nft, toAddress, provider }: ITransferNft) => {
+    const contractSigner = await useContractSigner(provider);
     const { dispatch } = store;
 
     let transaction = await contractSigner.transferNft(
-      param.toAddress,
-      ethers.utils.hexValue(param.nft.tokenId)
+      toAddress,
+      ethers.utils.hexValue(nft.tokenId)
     );
     await transaction.wait();
-    dispatch(fetchMyNft());
+    dispatch(fetchMyNft({ provider }));
   }
 );
 
+interface IListNftForSale {
+  url: string;
+  price: BigNumber;
+  router: any;
+  provider: JsonRpcProvider;
+}
+
 export const listNftForSale = createAsyncThunk(
   "market/listNftForSale",
-  async (param: { url: string; price: BigNumber; router: any }) => {
-    const contractSigner = await useContractSigner();
+  async ({ url, price, router, provider }: IListNftForSale) => {
+    const contractSigner = await useContractSigner(provider);
 
     let listingPrice = await contractSigner.getListingPrice();
     listingPrice = listingPrice.toString();
-    let transaction = await contractSigner.createToken(param.url, param.price, {
+    let transaction = await contractSigner.createToken(url, price, {
       value: listingPrice,
     });
     await transaction.wait();
 
-    param.router.push("/");
+    router.push("/");
   }
 );

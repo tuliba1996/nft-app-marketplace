@@ -14,7 +14,6 @@ import {
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { getMainnetURI } from "./helpers";
 import { DEFAULD_NETWORK } from "../../constants";
-import { Networks } from "../../constants";
 import { messages } from "../../constants/messages";
 import { useDispatch } from "react-redux";
 import { swithNetwork } from "../../helpers/switch-network";
@@ -81,7 +80,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
           package: WalletConnectProvider,
           options: {
             rpc: {
-              [Networks.LOCAL]: getMainnetURI(),
+              [DEFAULD_NETWORK]: getMainnetURI(),
             },
           },
         },
@@ -139,7 +138,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
 
     setProviderChainID(chainId);
 
-    if (chainId === Networks.LOCAL) {
+    if (chainId === DEFAULD_NETWORK) {
       setProvider(connectedProvider);
     }
 

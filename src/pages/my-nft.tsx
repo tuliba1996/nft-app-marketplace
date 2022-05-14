@@ -1,9 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { ethers } from "ethers";
-import axios from "axios";
-import Web3Modal from "web3modal";
-import { marketplaceAddress } from "../config";
-import NFTMarketplace from "abis/NFTMarketplace.json";
 import { NftsComponent } from "../components/NftsComponent";
 import {
   Button,
@@ -19,7 +14,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector, useWeb3Context } from "../hooks";
 import { fetchMyNft } from "../actions/userAction";
 import { transferNft } from "../actions/marketAction";
 
@@ -31,14 +26,23 @@ export default function MyNft() {
   const [toAddress, setToAddress] = useState("");
 
   const { nftsUser } = useAppSelector((state) => state.user);
-  const { loading } = useAppSelector((state) => state.user);
+  // const { loading } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const {
+    connect,
+    disconnect,
+    connected,
+    web3,
+    provider,
+    providerChainID,
+    checkWrongNetwork,
+  } = useWeb3Context();
 
   const initialRef = useRef();
   const finalRef = useRef();
 
   useEffect(() => {
-    dispatch(fetchMyNft());
+    dispatch(fetchMyNft({ provider }));
   }, []);
 
   const closeModal = () => {
@@ -52,14 +56,14 @@ export default function MyNft() {
   };
 
   const onTransferNft = () => {
-    dispatch(transferNft({ nft: nftSelected, toAddress: toAddress }));
+    dispatch(transferNft({ nft: nftSelected, toAddress: toAddress, provider }));
 
     closeModal();
   };
 
   return (
     <>
-      <NftsComponent nfts={nftsUser} loading={loading} openModal={openModal} />
+      <NftsComponent nfts={nftsUser} openModal={openModal} />
       <Modal
         initialFocusRef={initialRef.current}
         finalFocusRef={finalRef.current}

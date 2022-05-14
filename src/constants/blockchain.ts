@@ -1,7 +1,5 @@
 export const TOKEN_DECIMALS = 9;
 
-export enum Networks {
-  LOCAL = 1337,
-}
-
-export const DEFAULD_NETWORK = Networks.LOCAL;
+export const DEFAULD_NETWORK = process.env.NETWORK
+  ? parseInt(process.env.NETWORK)
+  : 4;

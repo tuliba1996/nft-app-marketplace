@@ -1,24 +1,25 @@
 /* hardhat.config.js */
-require("@nomiclabs/hardhat-waffle")
+require("@nomiclabs/hardhat-waffle");
+require("dotenv").config();
 
 module.exports = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      chainId: 1337
+      chainId: 1337,
     },
-    // mumbai: {
-    //   url: "https://rpc-mumbai.maticvigil.com",
-    //   accounts: [process.env.privateKey]
-    // }
+    rinkeby: {
+      url: process.env.DEPLOY_KEY_RINKEBY,
+      accounts: [process.env.DEPLOY_ACC_RINKEBY],
+    },
   },
   solidity: {
     version: "0.8.4",
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200
-      }
-    }
-  }
-}
+        runs: 200,
+      },
+    },
+  },
+};
