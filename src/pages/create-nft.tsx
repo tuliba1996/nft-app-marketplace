@@ -14,6 +14,7 @@ import { create as ipfsHttpClient } from "ipfs-http-client";
 import { ethers } from "ethers";
 import { useAppDispatch } from "../hooks";
 import { listNftForSale } from "../actions/marketAction";
+import { useRouter } from "next/router";
 
 const client = ipfsHttpClient({ url: "https://ipfs.infura.io:5001" });
 
@@ -24,6 +25,8 @@ export default function CreateNft() {
     name: "",
     description: "",
   });
+
+  const router = useRouter();
 
   const dispatch = useAppDispatch();
 
@@ -63,8 +66,9 @@ export default function CreateNft() {
     const url = await uploadToIPFS();
 
     const price = ethers.utils.parseUnits(formInput.price, "ether");
-
-    if (url && price) dispatch(listNftForSale({ url: url, price: price }));
+    if (url && price) {
+      dispatch(listNftForSale({ url: url, price: price, router }));
+    }
   };
 
   return (

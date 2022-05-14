@@ -54,8 +54,7 @@ export const transferNft = createAsyncThunk(
 
 export const listNftForSale = createAsyncThunk(
   "market/listNftForSale",
-  async (param: { url: string; price: BigNumber }) => {
-    const router = useRouter();
+  async (param: { url: string; price: BigNumber; router: any }) => {
     const contractSigner = await useContractSigner();
 
     let listingPrice = await contractSigner.getListingPrice();
@@ -65,6 +64,6 @@ export const listNftForSale = createAsyncThunk(
     });
     await transaction.wait();
 
-    router.push("/");
+    param.router.push("/");
   }
 );
