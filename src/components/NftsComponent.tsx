@@ -83,7 +83,12 @@ export const NftsComponent = (props: PropsType) => {
                           flexDirection="row"
                           alignItems="center"
                         >
-                          <Image src={ethLogo.src} boxSize="14px" mr={1} />
+                          <Image
+                            src={ethLogo.src}
+                            boxSize="14px"
+                            mr={1}
+                            alt="logo"
+                          />
                           &bull;
                           <Text p={1}>{nft.price}</Text>
                         </Box>

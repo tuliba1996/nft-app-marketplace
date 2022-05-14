@@ -5,7 +5,7 @@ export default function Logo(props: any) {
   return (
     <Box {...props}>
       <Link href="/" {...props}>
-        <Image boxSize="50px" objectFit="cover" src={ethLogo.src} />
+        <Image boxSize="50px" objectFit="cover" src={ethLogo.src} alt="logo" />
         <Text fontSize="xl" fontWeight="bold">
           NFT Marketplace
         </Text>

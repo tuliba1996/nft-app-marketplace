@@ -37,7 +37,12 @@ export default function Header() {
       <LinkBox>
         <NextLink href={"/"} passHref>
           <LinkOverlay display="flex" alignItems="center">
-            <Image boxSize="40px" objectFit="cover" src={ethLogo.src} />
+            <Image
+              boxSize="40px"
+              objectFit="cover"
+              src={ethLogo.src}
+              alt="ethlogo"
+            />
             <Heading size="l" fontWeight="extrabold" color="white">
               {siteTitle}
             </Heading>
