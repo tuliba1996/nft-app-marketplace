@@ -11,7 +11,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     dispatch(fetchNftListed({ provider }));
-  }, []);
+  }, [provider]);
 
   return <NftsComponent nfts={nftsListed} />;
 }

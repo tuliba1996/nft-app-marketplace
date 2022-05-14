@@ -14,9 +14,15 @@ export const fetchNftListed = createAsyncThunk(
   "user/fetchNftListed",
   async ({ provider }: IFetchNft) => {
     const contractSigner = useContractSigner(provider);
+    const address = await provider.getSigner().getAddress();
+    console.log("address", address);
 
+    // try {
+    //   const data = await contractSigner.fetchItemsListed();
+    // } catch (e) {
+    //   console.log("loi", e);
+    // }
     const data = await contractSigner.fetchItemsListed();
-
     const items = serializerNft(data, contractSigner);
 
     return items;
