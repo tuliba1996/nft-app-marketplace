@@ -22,7 +22,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     dispatch(fetchNftMarket({ provider }));
-  }, [provider, providerChainID, web3, dispatch]);
+  }, [provider, providerChainID, web3]);
 
   const onClickBuyNft = (nft: NftType) => {
     dispatch(buyNft({ nft, provider }));

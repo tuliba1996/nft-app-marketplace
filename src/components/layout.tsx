@@ -18,7 +18,7 @@ export default function Layout(props: Props) {
     if (hasCachedProvider()) {
       connect().then(() => {});
     }
-  }, [connect, hasCachedProvider]);
+  }, []);
 
   return (
     <div>

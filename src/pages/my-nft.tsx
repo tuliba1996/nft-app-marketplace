@@ -43,7 +43,7 @@ export default function MyNft() {
 
   useEffect(() => {
     dispatch(fetchMyNft({ provider }));
-  }, [dispatch, provider]);
+  }, []);
 
   const closeModal = () => {
     setToAddress("");
