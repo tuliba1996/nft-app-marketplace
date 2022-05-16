@@ -1,7 +1,10 @@
+import { ethers } from "ethers";
+import { DEFAULD_NETWORK } from "../constants";
+
 const switchRequest = () => {
   return window.ethereum.request({
     method: "wallet_switchEthereumChain",
-    params: [{ chainId: "0xa86a" }],
+    params: [{ chainId: ethers.utils.hexValue(DEFAULD_NETWORK) }],
   });
 };
 
@@ -31,7 +34,7 @@ export const swithNetwork = async () => {
     } catch (error: any) {
       if (error.code === 4902) {
         try {
-          await addChainRequest();
+          // await addChainRequest();
           await switchRequest();
         } catch (addError) {
           console.log(error);

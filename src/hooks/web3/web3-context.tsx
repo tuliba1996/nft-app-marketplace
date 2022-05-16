@@ -17,6 +17,7 @@ import { DEFAULD_NETWORK } from "../../constants";
 import { messages } from "../../constants/messages";
 import { useDispatch } from "react-redux";
 import { swithNetwork } from "../../helpers/switch-network";
+import { resetUserState } from "../../slices/userSlice";
 
 type onChainProvider = {
   connect: () => Promise<Web3Provider>;
@@ -149,7 +150,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
 
   const checkWrongNetwork = async (): Promise<boolean> => {
     if (providerChainID !== DEFAULD_NETWORK) {
-      const shouldSwitch = window.confirm(messages.switch_to_avalanche);
+      const shouldSwitch = window.confirm(messages.switch_to_rinkeby);
       if (shouldSwitch) {
         await swithNetwork();
         window.location.reload();
@@ -163,6 +164,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   const disconnect = useCallback(async () => {
     web3Modal.clearCachedProvider();
     setConnected(false);
+    dispatch(resetUserState());
 
     setTimeout(() => {
       window.location.reload();

@@ -22,8 +22,9 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    getUser: (state) => {
-      // state.loading = true;
+    resetUserState: (state) => {
+      state.nftsUser = [];
+      state.nftsListed = [];
     },
   },
   extraReducers: (builder) => {
@@ -48,6 +49,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { getUser } = userSlice.actions;
+export const { resetUserState } = userSlice.actions;
 
 export default userSlice.reducer;

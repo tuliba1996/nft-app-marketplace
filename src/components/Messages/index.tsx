@@ -1,25 +1,29 @@
 import { useDispatch, useSelector } from "react-redux";
-import { close } from "../../store/slices/messages-slice";
+import { close } from "slices/messages-slice";
 import "./console-interceptor";
-import { MessagesState } from "../../store/slices/messages-slice";
-import { IReduxState } from "../../store/slices/state.interface";
 import React, { useEffect } from "react";
 import { useSnackbar } from "notistack";
+import { IReduxState } from "../../slices/state.interface";
+import { MessagesState } from "../../slices/messages-slice";
 
 // A component that displays error messages
 function Messages() {
-    const { enqueueSnackbar } = useSnackbar();
-    const messages = useSelector<IReduxState, MessagesState>(state => state.messages);
-    const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const { message } = useSelector<IReduxState, MessagesState>(
+    (state) => state.messages
+  );
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (messages.message) {
-            enqueueSnackbar(JSON.stringify(messages.message));
-            dispatch(close());
-        }
-    }, [messages.message]);
+  useEffect(() => {
+    if (message?.text) {
+      enqueueSnackbar(message?.text, {
+        variant: message?.severity,
+      });
+      dispatch(close());
+    }
+  }, [message?.text]);
 
-    return <div></div>;
+  return <div></div>;
 }
 
 export default Messages;

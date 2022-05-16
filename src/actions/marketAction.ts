@@ -28,13 +28,13 @@ export const fetchNftMarket = createAsyncThunk(
 interface IBuyNft {
   nft: NftType;
   provider: JsonRpcProvider;
+  router: any;
 }
 
 export const buyNft = createAsyncThunk(
   "market/buyNft",
-  async ({ nft, provider }: IBuyNft) => {
+  async ({ nft, provider, router }: IBuyNft) => {
     const contractSigner = await useContractSigner(provider);
-    const { dispatch } = store;
 
     /* user will be prompted to pay the asking proces to complete the transaction */
     const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
@@ -42,7 +42,8 @@ export const buyNft = createAsyncThunk(
       value: price,
     });
     await transaction.wait();
-    dispatch(fetchNftMarket({ provider }));
+
+    router.push("/my-nft");
   }
 );
 
@@ -78,7 +79,6 @@ export const listNftForSale = createAsyncThunk(
   "market/listNftForSale",
   async ({ url, price, router, provider }: IListNftForSale) => {
     const contractSigner = await useContractSigner(provider);
-
     let listingPrice = await contractSigner.getListingPrice();
     listingPrice = listingPrice.toString();
     let transaction = await contractSigner.createToken(url, price, {

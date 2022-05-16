@@ -2,9 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { useContractSigner } from "../hooks/useContractSigner";
 import { serializerNft } from "../ultis/serializerNft";
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { ethers } from "ethers";
-import { marketplaceAddress } from "../config";
-import NFTMarketplace from "../abis/NFTMarketplace.json";
 
 interface IFetchNft {
   provider: JsonRpcProvider;
@@ -14,14 +11,7 @@ export const fetchNftListed = createAsyncThunk(
   "user/fetchNftListed",
   async ({ provider }: IFetchNft) => {
     const contractSigner = useContractSigner(provider);
-    const address = await provider.getSigner().getAddress();
-    console.log("address", address);
 
-    // try {
-    //   const data = await contractSigner.fetchItemsListed();
-    // } catch (e) {
-    //   console.log("loi", e);
-    // }
     const data = await contractSigner.fetchItemsListed();
     const items = serializerNft(data, contractSigner);
 
@@ -32,20 +22,11 @@ export const fetchNftListed = createAsyncThunk(
 export const fetchMyNft = createAsyncThunk(
   "user/fetchMyNft",
   async ({ provider }: IFetchNft) => {
-    // const contractSigner = useContractSigner(provider);
+    const contractSigner = useContractSigner(provider);
 
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(
-      marketplaceAddress,
-      NFTMarketplace.abi,
-      signer
-    );
-    const t = await signer.getAddress();
-    console.log("contract", t);
-    const data = await contract.fetchMyNFTs();
-    console.log("data");
+    const data = await contractSigner.fetchMyNFTs();
 
-    const items = serializerNft(data, contract);
+    const items = serializerNft(data, contractSigner);
 
     return items;
   }

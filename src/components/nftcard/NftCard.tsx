@@ -1,143 +1,60 @@
-import React from 'react'
-import './bids.css'
-import { AiFillHeart,AiOutlineHeart } from "react-icons/ai";
-import bids1 from '../../assets/bids1.png'
-import bids2 from '../../assets/bids2.png'
-import bids3 from '../../assets/bids3.png'
-import bids4 from '../../assets/bids4.png'
-import bids5 from '../../assets/bids5.png'
-import bids6 from '../../assets/bids6.png'
-import bids7 from '../../assets/bids7.png'
-import bids8 from '../../assets/bids8.png'
-import { Link } from 'react-router-dom';
+import React from "react";
+import styles from "./NftCard.module.css";
+import { AiFillHeart } from "react-icons/ai";
+import { Link, SimpleGrid } from "@chakra-ui/react";
+import { NftType } from "../../type/marketType";
 
-const Bids = ({title}) => {
-  return (
-    <div className='bids section__padding'>
-      <div className="bids-container">
-        <div className="bids-container-text">
-          <h1>{title}</h1>
-        </div>
-        <div className="bids-container-card">
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids1} alt="" />
-              <Link to={`/post/123`}>
-              <p className="bids-title">Abstact Smoke Red</p>
-              </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>1.25 <span>ETH</span></p>
-                <p> <AiFillHeart /> 92</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids2} alt="" />
-              <Link to={`/post/123`}>
-              <p className="bids-title">Mountain Landscape</p>
-              </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>0.20 <span>ETH</span></p>
-                <p> <AiFillHeart /> 25</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids3} alt="" />
-              <Link to={`/post/123`}>
-              <p className="bids-title">Paint Color on Wall</p>
-              </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>0.55 <span>ETH</span></p>
-                <p> <AiFillHeart /> 55</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids4} alt="" />
-              <Link to={`/post/123`}>
-              <p className="bids-title">Abstract Patern</p>
-              </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>0.87 <span>ETH</span></p>
-                <p> <AiFillHeart /> 82</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids5} alt="" />
-              <Link to={`/post/123`}>
-              <p className="bids-title">White Line Grafiti</p>
-              </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>0.09 <span>ETH</span></p>
-                <p> <AiFillHeart /> 22</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids6} alt="" />
-              <Link to={`/post/123`}>
-              <p className="bids-title">Abstract Triangle</p>
-              </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>0.90 <span>ETH</span></p>
-                <p> <AiFillHeart /> 71</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids7} alt="" />
-              <Link to={`/post/123`}>
-              <p className="bids-title">Lake Landscape</p>
-              </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>0.52 <span>ETH</span></p>
-                <p> <AiFillHeart /> 63</p>
-              </div>
-            </div>
-          </div>
-          <div className="card-column" >
-            <div className="bids-card">
-              <div className="bids-card-top">
-                <img src={bids8} alt="" />
-              <Link to={`/post/123`}>
-              <p className="bids-title">Blue Red Art</p>
-              </Link>
-              </div>
-              <div className="bids-card-bottom">
-                <p>0.85 <span>ETH</span></p>
-                <p> <AiFillHeart /> 66</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="load-more">
-        <button>Load More</button>
-      </div>
-    </div>
-  )
+interface IPropsType {
+  title: string;
+  nfts: NftType[];
+  openModal?: (nft: NftType) => void;
 }
 
-export default Bids
+const NftCard = ({ title, nfts, openModal }: IPropsType) => {
+  return (
+    <div className={`${styles["bids"]} section__padding`}>
+      <div className={styles["bids-container"]}>
+        <div className={styles["bids-container-text"]}>
+          <h1>{title}</h1>
+        </div>
+        <div className={styles["bids-container-card"]}>
+          {nfts.map((nft, index) => {
+            return (
+              <div key={index} className={styles["card-column"]}>
+                <div className={styles["bids-card"]}>
+                  <div className={styles["bids-card-top"]}>
+                    <img src={nft.image} alt="" />
+                    <Link href={`/item/${nft.tokenId}`}>
+                      <p className={styles["bids-title"]}>{nft.name}</p>
+                    </Link>
+                  </div>
+                  <div className={styles["bids-card-bottom"]}>
+                    <p>
+                      {nft.price} <span>ETH</span>
+                    </p>
+                    <p>
+                      {" "}
+                      <AiFillHeart /> {Math.floor(Math.random() * 10)}
+                    </p>
+                  </div>
+                  {openModal && (
+                    <div>
+                      <button
+                        onClick={() => openModal(nft)}
+                        className={styles["primary-btn"]}
+                      >
+                        Transfer
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NftCard;
