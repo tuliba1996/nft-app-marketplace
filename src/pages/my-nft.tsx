@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { NftsComponent } from "../components/NftsComponent";
 import {
   Button,
   FormControl,
@@ -17,6 +16,7 @@ import {
 import { useAppDispatch, useAppSelector, useWeb3Context } from "../hooks";
 import { fetchMyNft } from "../actions/userAction";
 import { transferNft } from "../actions/marketAction";
+import { NftCard } from "../components";
 
 export default function MyNft() {
   const [nftSelected, setNftSelected] = useState<any>({});
@@ -26,7 +26,6 @@ export default function MyNft() {
   const [toAddress, setToAddress] = useState("");
 
   const { nftsUser } = useAppSelector((state) => state.user);
-  // const { loading } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const {
     connect,
@@ -42,8 +41,8 @@ export default function MyNft() {
   const finalRef = useRef();
 
   useEffect(() => {
-    dispatch(fetchMyNft({ provider }));
-  }, []);
+    if (connected) dispatch(fetchMyNft({ provider }));
+  }, [connected]);
 
   const closeModal = () => {
     setToAddress("");
@@ -63,7 +62,7 @@ export default function MyNft() {
 
   return (
     <>
-      <NftsComponent nfts={nftsUser} openModal={openModal} />
+      <NftCard title="My NFT" nfts={nftsUser} openModal={openModal} />
       <Modal
         initialFocusRef={initialRef.current}
         finalFocusRef={finalRef.current}
@@ -83,6 +82,7 @@ export default function MyNft() {
                 value={toAddress}
                 onChange={(e) => setToAddress(e.target.value)}
                 placeholder="Address"
+                autoFocus={true}
               />
             </FormControl>
           </ModalBody>

@@ -1,25 +1,19 @@
-import {
-  SimpleGrid,
-  Input,
-  Center,
-  Button,
-  Stack,
-  InputGroup,
-  InputLeftElement,
-  Text,
-} from "@chakra-ui/react";
-
 import { useState } from "react";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { ethers } from "ethers";
+
+import { useRouter } from "next/router";
 import { useAppDispatch, useWeb3Context } from "../hooks";
 import { listNftForSale } from "../actions/marketAction";
-import { useRouter } from "next/router";
+import { Button } from "@chakra-ui/react";
+import { error } from "../slices/messages-slice";
+import { messages } from "../constants/messages";
 
 const client = ipfsHttpClient({ url: "https://ipfs.infura.io:5001" });
 
 export default function CreateNft() {
   const [fileUrl, setFileUrl] = useState<string>("");
+
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
@@ -30,9 +24,9 @@ export default function CreateNft() {
 
   const dispatch = useAppDispatch();
 
-  const { provider } = useWeb3Context();
+  const { provider, checkWrongNetwork } = useWeb3Context();
 
-  async function onChange(e: any) {
+  async function onChangeFile(e: any) {
     const file = e.target.files[0];
     try {
       const added = await client.add(file, {
@@ -65,7 +59,14 @@ export default function CreateNft() {
   }
 
   const onListNFTForSale = async () => {
+    if (await checkWrongNetwork()) return;
+
     const url = await uploadToIPFS();
+
+    if (!url) {
+      dispatch(error({ text: messages.input_info_mint_nft }));
+      return;
+    }
 
     const price = ethers.utils.parseUnits(formInput.price, "ether");
     if (url && price) {
@@ -74,64 +75,60 @@ export default function CreateNft() {
   };
 
   return (
-    <SimpleGrid columns={1} spacing={10}>
-      <Center>
-        <Stack
-          borderWidth="1px"
-          borderRadius="lg"
-          overflow="hidden"
-          spacing={4}
-          p={10}
-          margin={40}
-        >
-          <Text>Create NFT</Text>
-          <InputGroup>
-            <InputLeftElement pointerEvents="none" />
-            <Input
-              type="text"
-              placeholder="Assert Name"
+    <div className="create section__padding">
+      <div className="create-container">
+        <h1>Create new Item</h1>
+        <form className="writeForm" autoComplete="off">
+          <div className="formGroup">
+            <label>Upload</label>
+            <input
+              onChange={onChangeFile}
+              type="file"
+              className="custom-file-input"
+            />
+          </div>
+          <div className="formGroup">
+            <label>Name</label>
+            <input
               onChange={(e) =>
                 updateFormInput({ ...formInput, name: e.target.value })
               }
-            />
-          </InputGroup>
-          <InputGroup>
-            <InputLeftElement pointerEvents="none" />
-            <Input
               type="text"
-              placeholder="Assert Description"
+              placeholder="Item Name"
+              autoFocus={true}
+            />
+          </div>
+          <div className="formGroup">
+            <label>Description</label>
+            <textarea
               onChange={(e) =>
                 updateFormInput({ ...formInput, description: e.target.value })
               }
+              placeholder="Decription of your item"
             />
-          </InputGroup>
-
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              color="gray.300"
-              fontSize="1.2em"
-            >
-              $
-            </InputLeftElement>
-            <Input
-              placeholder="Enter amount"
-              onChange={(e) =>
-                updateFormInput({ ...formInput, price: e.target.value })
-              }
-            />
-          </InputGroup>
-          <InputGroup>
-            <Input
-              type="file"
-              placeholder="Assert Description"
-              onChange={onChange}
-            />
-          </InputGroup>
-
-          <Button onClick={onListNFTForSale}>Create NFT</Button>
-        </Stack>
-      </Center>
-    </SimpleGrid>
+          </div>
+          <div className="formGroup">
+            <label>Price</label>
+            <div className="twoForm">
+              <input
+                onChange={(e) =>
+                  updateFormInput({ ...formInput, price: e.target.value })
+                }
+                type="text"
+                placeholder="Price"
+              />
+              <select>
+                <option value="ETH">ETH</option>
+                <option value="BTC">BTC</option>
+                <option value="LTC">LTC</option>
+              </select>
+            </div>
+          </div>
+          <Button onClick={() => onListNFTForSale()} className="writeButton">
+            Create Item
+          </Button>
+        </form>
+      </div>
+    </div>
   );
 }
