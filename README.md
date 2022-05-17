@@ -19,7 +19,7 @@ NFT Marketplace template for creation, sale, and purchase of digital art as NFTs
 ## Setup file .env
 
 ```dotenv
-# config deplo testnet 
+# config deploy testnet 
 DEPLOY_KEY_RINKEBY=""
 DEPLOY_ACC_RINKEBY=""
 # use local network
